@@ -3,13 +3,13 @@ $ip = "www.google.com"
 
 # Define the log file
 $logFile = "logs.txt"
-
+$networkName = Get-NetConnectionProfile | Where {$_.IPv4Connectivity -eq "Internet"} | Select -ExpandProperty Name
 $counter = 0;
 
 #Title
 "I-ProTester" | Out-File -Append $logFile; 
 Write-Output "I-ProTester";
-"Welcome to the Internet Provider Tester app" | Out-File -Append $logFile; 
+"Internet Provider Tester" | Out-File -Append $logFile; 
 Write-Output "Welcome to the Internet Provider Tester app";
 "By: Jonathan Velasco" | Out-File -Append $logFile;
 Write-Output "By: Jonathan Velasco";
@@ -28,14 +28,14 @@ while ($true) {
     # Check the result of the ping
     if ($ping) {
         # If the ping was successful, log "Connected"
-        "$timestamp - Connected" | Out-File -Append $logFile
-		Write-Output "$timestamp - Connected"
+        "$timestamp $networkName - Connected" | Out-File -Append $logFile
+		Write-Output "$timestamp $networkName - Connected"
 		$counter = 0;
     } else {
-		$counter++;
-        # If the ping failed, log "Disconnected"
-        "$timestamp - Disconnected for approximately $counter minutes." | Out-File -Append $logFile
-		Write-Output "$timestamp - Disconnected for approximately $counter minutes."
+		  $counter++;
+      # If the ping failed, log "Disconnected"
+      "$timestamp $networkName - Disconnected for approximately $counter minutes." | Out-File -Append $logFile
+      Write-Output "$timestamp $networkName - Disconnected for approximately $counter minutes."
     }
 
     # Wait for 60 seconds (1 minute)
