@@ -5,6 +5,32 @@ $ip = "www.google.com"
 $logFile = "logs.txt"
 $networkName = Get-NetConnectionProfile | Where {$_.IPv4Connectivity -eq "Internet"} | Select -ExpandProperty Name
 $counter = 0;
+$asciiCount = 0;
+
+$ascii = @(
+	'        ____        ', 
+	' /  |  |    |  /  | ', 
+	'/___|_ |    | /___|_', 
+	'    |  |    |     | ', 
+	'    |  |____|     | ', 
+	'	                 ',
+	'                    ',
+	'                    ',
+	'                    '
+);
+
+$asciiTitle = @(
+	'___    __   __   __  ___  __  __  ___  __  __ ', 
+	' |    |  | |  | |  |  |  |   |     |  |   |  |', 
+	' |  _ |__| |__| |  |  |  |__ |__   |  |__ |__|', 
+	' |    |    |\   |  |  |  |      |  |  |   |\  ', 
+	'_|_   |    | \  |__|  |  |__  __|  |  |__ | \ ', 
+	''
+);
+
+for ($index = 0; $index -lt $asciiTitle.count; $index++) {
+	Write-Output $asciiTitle[$index];
+}
 
 #Title
 "I-ProTester" | Out-File -Append $logFile; 
@@ -15,6 +41,8 @@ Write-Output "Welcome to the Internet Provider Tester app";
 Write-Output "By: Jonathan Velasco";
 "jonathan@it-velasco.com" | Out-File -Append $logFile;
 Write-Output "jonathan@it-velasco.com";
+
+
 
 # Start an infinite loop
 while ($true) {
@@ -28,14 +56,28 @@ while ($true) {
     # Check the result of the ping
     if ($ping) {
         # If the ping was successful, log "Connected"
-        "$timestamp $networkName - Connected" | Out-File -Append $logFile
-		Write-Output "$timestamp $networkName - Connected"
+        "$timestamp $networkName - Connected" | Out-File -Append $logFile;
+		Write-Output "$timestamp $networkName - Connected";
 		$counter = 0;
+		$asciiCount = 0;
     } else {
-		  $counter++;
-      # If the ping failed, log "Disconnected"
-      "$timestamp $networkName - Disconnected for approximately $counter minutes." | Out-File -Append $logFile
-      Write-Output "$timestamp $networkName - Disconnected for approximately $counter minutes."
+		$counter++;
+
+		$print404 = $ascii[$asciiCount];
+        # If the ping failed, log "Disconnected"
+		if ($counter -eq 1) {
+			"$timestamp $networkName - Disconnected for approximately $counter minute." | Out-File -Append $logFile;
+			Write-Output "$timestamp $networkName - Disconnected for approximately $counter minute.  $print404";
+		} else {
+			"$timestamp $networkName - Disconnected for approximately $counter minutes." | Out-File -Append $logFile;
+			Write-Output "$timestamp $networkName - Disconnected for approximately $counter minutes. $print404";
+		}
+		
+		if ($asciiCount -lt $ascii.count) {
+			$asciiCount++;
+		} else {
+			$asciiCount = 0;
+		}
     }
 
     # Wait for 60 seconds (1 minute)
